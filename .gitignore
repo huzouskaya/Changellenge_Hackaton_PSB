@@ -218,3 +218,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+data/knowledge-base/
+data/vector_store/
+*.faiss
+*.json
+
+demo_output.csv
+output.csv
+
+*.log
