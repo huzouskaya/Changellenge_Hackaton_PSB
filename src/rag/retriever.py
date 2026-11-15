@@ -1,4 +1,4 @@
-from src.rag.indexer import Indexer
+from indexer import Indexer
 from src.llm.client import LLMClient
 
 class Retriever:

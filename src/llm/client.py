@@ -1,5 +1,5 @@
 from openai import OpenAI
-from src.config import Config
+from config import Config
 
 class LLMClient:
     def __init__(self):

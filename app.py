@@ -2,11 +2,11 @@ from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict
 from pathlib import Path
-from src.agents.assistant import Assistant
+from assistant import Assistant
 
-app = FastAPI()
+app = FastAPI(title="Юридический ассистент ПСБ")
 
 static_dir = Path(__file__).parent / "static"
 if static_dir.exists():
@@ -39,3 +39,7 @@ async def chat(req: ChatRequest):
         return ChatResponse(answer=res["answer"], sources=res["sources"])
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
