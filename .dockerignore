@@ -1,0 +1,12 @@
+__pycache__
+*.pyc
+.env
+.venv
+venv
+.git
+.idea
+.vscode
+data/index
+data/knowledge-base
+*.zip
+*.csv
