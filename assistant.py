@@ -114,7 +114,13 @@ class Assistant:
 
     def ask(self, question, history=None):
         self._ensure_client()
-
+    
+        if not self.ready and self.client is None:
+            return {
+                "answer": "База знаний и API недоступны. Проверьте LLM_API_KEY и наличие индекса.",
+                "sources": [],
+            }
+            
         def embed_fn(texts):
             if not self.client:
                 import numpy as np

@@ -33,15 +33,20 @@ async function sendMessage() {
         });
         const data = await res.json();
         removeLoading(loadingId);
-        appendMessage('bot', data.answer);
+        
+        const prefix = data.bot_available ? '' : '⚠️ ';
+        appendMessage('bot', prefix + data.answer);
+        
+        if (!data.bot_available) {
+            const lastBubble = messagesDiv.lastElementChild?.querySelector('.bubble');
+            if (lastBubble) lastBubble.style.borderLeft = '3px solid #dfb87d';
+        }
+        
         history.push({ role: 'assistant', content: data.answer });
         renderSources(data.sources);
     } catch (err) {
         removeLoading(loadingId);
-        appendMessage('bot', 'Ошибка соединения с сервером.');
-    } finally {
-        sendBtn.disabled = false;
-        input.focus();
+        appendMessage('bot', '🔴 Ошибка соединения с сервером.');
     }
 }
 
@@ -92,3 +97,24 @@ function escapeHtml(text) {
     const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
     return text.replace(/[&<>"']/g, m => map[m]);
 }
+
+fetch('/api/health')
+    .then(r => r.json())
+    .then(data => {
+        const bar = document.getElementById('status-bar');
+        if (!bar) return;
+        if (data.bot_available) {
+            bar.className = 'status-bar ok';
+            bar.textContent = '🟢 Бот подключён и готов к работе';
+        } else {
+            bar.className = 'status-bar warn';
+            bar.textContent = '🟡 Бот недоступен: ' + (data.error || 'неизвестная причина');
+        }
+    })
+    .catch(() => {
+        const bar = document.getElementById('status-bar');
+        if (bar) {
+            bar.className = 'status-bar err';
+            bar.textContent = '🔴 Не удалось связаться с сервером';
+        }
+    });
